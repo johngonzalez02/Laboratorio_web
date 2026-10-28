@@ -1,0 +1,38 @@
+﻿<main class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-0">Eventos</h2>
+      <p class="text-secondary mb-0">Información consultada desde la base de datos</p>
+    </div>
+    <a routerLink="/reservations" class="btn btn-outline-primary">Ver reservas</a>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+  } @else if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  } @else {
+    <div class="row g-4">
+      @for (e of events(); track e.id) {
+        <div class="col-12 col-md-6 col-lg-4">
+          <article class="card h-100 shadow-sm">
+            <div class="card-body d-flex flex-column gap-2">
+              <span class="badge {{ badgeClass(e.estado) }} align-self-start">{{ e.estado }}</span>
+              <h3 class="h5 fw-bold mb-0">{{ e.nombre }}</h3>
+              <p class="text-secondary mb-1">{{ e.descripcion }}</p>
+              <div class="text-secondary small">{{ e.teatro }} · {{ e.ciudad }}</div>
+              <div class="text-secondary small">{{ e.fecha_inicio | date: 'dd/MM/yyyy HH:mm' }}</div>
+              <div class="fw-bold text-primary mt-auto">
+                {{ e.precio | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+              </div>
+            </div>
+          </article>
+        </div>
+      } @empty {
+        <p class="text-secondary">No hay eventos registrados.</p>
+      }
+    </div>
+  }
+</main>

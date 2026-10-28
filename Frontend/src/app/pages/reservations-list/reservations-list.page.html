@@ -1,0 +1,64 @@
+﻿<main class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-0">Reservas</h2>
+      <p class="text-secondary mb-0">Información consultada desde la base de datos</p>
+    </div>
+    <a routerLink="/events" class="btn btn-outline-primary">Ver eventos</a>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+  } @else if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  } @else {
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-4">
+        <div class="card shadow-sm"><div class="card-body">
+          <small class="text-secondary">Total de reservas</small>
+          <h3 class="fw-bold mb-0">{{ reservations().length }}</h3>
+        </div></div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm"><div class="card-body">
+          <small class="text-secondary">Confirmadas</small>
+          <h3 class="fw-bold mb-0">{{ confirmed().length }}</h3>
+        </div></div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="card shadow-sm"><div class="card-body">
+          <small class="text-secondary">Ingresos confirmados</small>
+          <h3 class="fw-bold mb-0">{{ income() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</h3>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="table-responsive card shadow-sm">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Código</th><th>Cliente</th><th>Evento</th><th>Fecha</th>
+            <th>Entradas</th><th>Total</th><th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of reservations(); track r.id) {
+            <tr>
+              <td>#{{ r.id }}</td>
+              <td>{{ r.cliente }}<br /><small class="text-secondary">{{ r.correo }}</small></td>
+              <td>{{ r.evento }}</td>
+              <td>{{ r.fecha | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ r.entradas }}</td>
+              <td>{{ r.total | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}</td>
+              <td><span class="badge {{ badgeClass(r.estado) }}">{{ r.estado }}</span></td>
+            </tr>
+          } @empty {
+            <tr><td colspan="7" class="text-center text-secondary py-4">No hay reservas registradas.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</main>
